@@ -3,7 +3,8 @@
 from fastapi import FastAPI, Depends, Response, status, HTTPException
 import uvicorn
 from sqlalchemy.orm import Session
-from __init__ import models, database, schema
+from __init__ import models, database, schema, hashing
+from typing import List
 
 
 app = FastAPI()
@@ -81,6 +82,23 @@ def update_blog(id, response: Response, request:schema.Blog_Model, db: Session =
     blogs.update({"title": request.title, "body": request.body}, synchronize_session=False)
     db.commit()
     return 'Blog Updated Successfully'
+
+
+
+# ====== User Registeration =======
+@app.post('/user', status_code=status.HTTP_201_CREATED)
+def user_registeration(request: schema.user, db: Session = Depends(get_db)):
+    new_user = models.User(name = request.name, email = request.email, password=hashing.Hash.pwd_bcrypt(request.password))
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return 'New user Added'
+
+
+@app.get('/user', status_code = 200)
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return users
 
 
 

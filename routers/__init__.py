@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
 
-import database, hashing, models, schema
+import database, hashing, models, schema, JWToken, oauth2
 
 
 

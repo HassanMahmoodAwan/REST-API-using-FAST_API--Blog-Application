@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, Response, status, HTTPException
 from sqlalchemy.orm import Session
-from __init__ import schema, database, models
+from __init__ import schema, database, models, oauth2
 
-router = APIRouter()
+router = APIRouter(
+    prefix = '/blog',
+    tags = ['Blogs']
+)
 
 get_db = database.get_db
 
@@ -10,14 +13,14 @@ get_db = database.get_db
 
 
 # ---  GET all the Blogs ----
-@router.get('/blog', tags=['Blog'])
-def all_blogs(db: Session = Depends(get_db)):
+@router.get('/')
+def all_blogs(db: Session = Depends(get_db), get_current_user: schema.user = Depends(oauth2.get_current_user)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
 # --- Post Method ---
-@router.post('/blog', status_code=status.HTTP_201_CREATED, tags=['Blog'])
+@router.post('/', status_code=status.HTTP_201_CREATED)
 def blog(request: schema.Blog_Model, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=request.title, body=request.body)
     db.add(new_blog)
@@ -27,7 +30,7 @@ def blog(request: schema.Blog_Model, db: Session = Depends(get_db)):
 
 
 # ---- Single Particular Blog ----
-@router.get('/blog/{id}', status_code = 200, tags=['Blog'])
+@router.get('/{id}', status_code = 200)
 def show_blog(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
 
@@ -41,7 +44,7 @@ def show_blog(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 # --- Delete particular Blog ---
-@router.delete('/blog/{id}', status_code = 204, tags=['Blog'])
+@router.delete('/{id}', status_code = 204)
 def delete_blog(id, db:Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     
@@ -54,7 +57,7 @@ def delete_blog(id, db:Session = Depends(get_db)):
 
 
 # --- UPDATE ---
-@router.put('/blog/{id}', status_code = 202, tags=['Blog'])
+@router.put('/{id}', status_code = 202)
 def update_blog(id, response: Response, request:schema.Blog_Model, db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).filter(models.Blog.id == id)
 

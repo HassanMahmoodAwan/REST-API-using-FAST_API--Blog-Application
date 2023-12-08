@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from sqlalchemy.orm import Session
 from __init__ import models, database
-from routers import blog, user
+from routers import blog, user, authentication
 import uvicorn
 
 app = FastAPI()
@@ -12,6 +12,7 @@ models.Base.metadata.create_all(bind = database.engine)
 
 app.include_router(blog.router)
 app.include_router(user.router)
+app.include_router(authentication.router)
 
 
 

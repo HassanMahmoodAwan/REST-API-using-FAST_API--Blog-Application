@@ -8,7 +8,7 @@ class Blog_Model(BaseModel):
     published: Optional[bool]
 
 
-# Showing this model
+# Showing this model            # Not working
 class ShowBlog(Blog_Model):
     class Config():
         orm_mode = True

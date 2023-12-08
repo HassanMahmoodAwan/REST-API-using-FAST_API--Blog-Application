@@ -1,6 +1,7 @@
 # from .database import Base
 from __init__ import database
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import Relationship
 
 Base = database.Base
 
@@ -11,6 +12,7 @@ class Blog(Base):
     title = Column(String)
     body = Column(String)
     
+    
 
 class User(Base):
     __tablename__ = 'User Registeration'
@@ -19,3 +21,6 @@ class User(Base):
     name = Column(String)
     email = Column(String)
     password= Column(String)
+    
+
+   

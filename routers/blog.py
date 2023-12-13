@@ -20,7 +20,7 @@ def all_blogs(db: Session = Depends(get_db), get_current_user: schema.user = Dep
 
 
 # --- Post Method ---
-@router.post('/', status_code=status.HTTP_201_CREATED)
+@router.post('/', status_code = status.HTTP_201_CREATED)
 def blog(request: schema.Blog_Model, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=request.title, body=request.body)
     db.add(new_blog)

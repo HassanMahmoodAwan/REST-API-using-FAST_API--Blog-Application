@@ -14,7 +14,7 @@ get_db = database.get_db
 # ====== User Registeration =======
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def user_registeration(request: schema.user, db: Session = Depends(get_db)):
-    new_user = models.User(name = request.name, email = request.email, password=hashing.Hash.pwd_bcrypt(request.password))
+    new_user = models.User(name = request.name, email = request.email, password = hashing.Hash.pwd_bcrypt(request.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
